@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ResourceBundle;
 
 public class NumberGuessingGame {
     // Variables declared here instead of in blocks to make the code simpler
@@ -7,11 +8,18 @@ public class NumberGuessingGame {
     static int numberToGuess;
     static String playerUsername;
 
+    // Internationalization
+    /*
+    When it is .printf because it needs variables in the string it is necessary to put \n at the end of
+    the string in the .properties file because otherwise it does not make a line break
+     */
+    static final ResourceBundle i18n = ResourceBundle.getBundle("i18n.translations");
+
     public static void guessingNumberGame(){
         scanner = new Scanner(System.in);
-        System.out.println("Welcome player");
+        System.out.println(i18n.getString("WELCOME"));
         getUsername();
-        System.out.println(playerUsername + ", you have to guess a number between 0 and 100");
+        System.out.printf(i18n.getString("GAMEINFO"), playerUsername);
         getAttempts();
         generateRandomNumber();
         startGame();
@@ -22,20 +30,20 @@ public class NumberGuessingGame {
         int attempt;
 
         for (attempt = 1; attempt <= numOfAttempts; attempt++) {
-            System.out.println("Attempt " + attempt + ", what do you think the number is?");
+            System.out.printf(i18n.getString("ASKGUESS"), attempt);
             guess = getNum();
             if (guess == numberToGuess) {
-                System.out.println("Congratulations" + playerUsername + "! You got the number right!");
+                System.out.printf(i18n.getString("CONGRATS"), playerUsername);
                 break;
             } else if (guess > numberToGuess) {
-                System.out.println("The number is smaller than " + guess);
+                System.out.printf(i18n.getString("SMALLER"), guess);
             } else {
-                System.out.println("the number is greater than " + guess);
+                System.out.printf(i18n.getString("GREATER"), guess);
             }
         }
 
         if (attempt == numOfAttempts + 1){
-            System.out.println("Wow... looks like you've run out of tries. the number was " + numberToGuess);
+            System.out.printf(i18n.getString("LOSE"), numberToGuess);
         }
 
     }
@@ -46,15 +54,15 @@ public class NumberGuessingGame {
 
     public static void getAttempts(){
         while (numOfAttempts < 1) {
-            System.out.println("How many attempts do you want to do?");
+            System.out.println(i18n.getString("ASKATTEMPTS"));
             numOfAttempts = getNum();
-            if (numOfAttempts == 0) System.out.println("At least try once " + playerUsername + "!");
-            if (numOfAttempts < 0) System.out.println("I don't think negative attempts can be made...");
+            if (numOfAttempts == 0) System.out.printf(i18n.getString("TRYONCE"), playerUsername);
+            if (numOfAttempts < 0) System.out.println(i18n.getString("NOTNEGATIVES"));
         }
     }
 
     public static void getUsername(){
-        System.out.println("Enter your username for the game: ");
+        System.out.println(i18n.getString("ASKUSERNAME"));
         playerUsername = scanner.next();
     }
 
@@ -62,7 +70,7 @@ public class NumberGuessingGame {
         try{
             return scanner.nextInt();
         }catch (Exception e){
-            System.out.println("We want honest players... and who don't play the fool so much!");
+            System.out.println(i18n.getString("HONESTPLAYERS"));
             System.exit(1);
         }
         return -1; // Let's assume it doesn't get here
